@@ -14,7 +14,7 @@ s3 = boto3.client('s3')
 s3_resource = boto3.resource('s3')
 
 
-destination_bucketname = os.environ['destination_bucketname']
+destination_bucketname = os.environ['cxr-dataset-yolo']
 
 
 def lambda_handler(event, context):
@@ -59,79 +59,79 @@ def lambda_handler(event, context):
 
 
     
-    smtp_mail = os.environ['from_mail']
-    from_mail = os.environ['from_mail']
-    to_mail = os.environ['to_mail']
-    smtp_mail_password = os.environ['password']
+    # smtp_mail = os.environ['from_mail']
+    # from_mail = os.environ['from_mail']
+    # to_mail = os.environ['to_mail']
+    # smtp_mail_password = os.environ['password']
     
-    fname = filename.split('.')[-2]
-    with open('/tmp/exp/labels/'+fname+'.txt') as f:
-        lines = f.readlines()
-        print('content of labels files is: ', lines)
-        if len(lines) != 0:    
-            print('before calling email function')
-            mail_user(smtp_mail, from_mail, to_mail, smtp_mail_password, path, filename)
-            print('after sending email')
-        else:
-            print('nothing has been detected, no email is sent')
+    # fname = filename.split('.')[-2]
+    # with open('/tmp/exp/labels/'+fname+'.txt') as f:
+    #     lines = f.readlines()
+    #     print('content of labels files is: ', lines)
+    #     if len(lines) != 0:    
+    #         print('before calling email function')
+    #         mail_user(smtp_mail, from_mail, to_mail, smtp_mail_password, path, filename)
+    #         print('after sending email')
+    #     else:
+    #         print('nothing has been detected, no email is sent')
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps("Document processed successfully using yolov5!"),
-    }
+    # return {
+    #     "statusCode": 200,
+    #     "body": json.dumps("Document processed successfully using yolov5!"),
+    # }
 
 
 # def mail_user(smtp_mail, from_mail, to_mail, smtp_mail_password, path, filename):
-    print('inside mail_user method')
-    try:
-        with open('/tmp/'+filename, 'rb') as f:
-            img_data = f.read()
+    # print('inside mail_user method')
+    # try:
+    #     with open('/tmp/'+filename, 'rb') as f:
+    #         img_data = f.read()
 
-        msg = MIMEMultipart()
-        msg['Subject'] = "Image from lambda, Client/Cam: " + path + " " + filename
-        msg['From'] = from_mail
-        msg['To'] = to_mail
+    #     msg = MIMEMultipart()
+    #     msg['Subject'] = "Image from lambda, Client/Cam: " + path + " " + filename
+    #     msg['From'] = from_mail
+    #     msg['To'] = to_mail
 
-        text = MIMEText("Image: ")
-        msg.attach(text)
-        image = MIMEImage(img_data, name=os.path.basename(filename))
-        msg.attach(image)
+    #     text = MIMEText("Image: ")
+    #     msg.attach(text)
+    #     image = MIMEImage(img_data, name=os.path.basename(filename))
+    #     msg.attach(image)
 
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(smtp_mail, smtp_mail_password)
-            smtp.send_message(msg)
-        print('Done mailing the user')
-    except Exception as e:
-        print('trying from the second emailing method, exception is: ',e)
-        SendMail1(smtp_mail, from_mail, to_mail, smtp_mail_password, path, filename)
-        print('done sending email from sendmail1 method')
+    #     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+    #         smtp.login(smtp_mail, smtp_mail_password)
+    #         smtp.send_message(msg)
+    #     print('Done mailing the user')
+    # except Exception as e:
+    #     print('trying from the second emailing method, exception is: ',e)
+    #     SendMail1(smtp_mail, from_mail, to_mail, smtp_mail_password, path, filename)
+    #     print('done sending email from sendmail1 method')
 
 
 # def SendMail1(smtp_mail, from_mail, to_mail, smtp_mail_password, path, filename):
-    print('inside mail_user method')
-    s = smtplib.SMTP(host='smtp.gmail.com', port=587)
-    s.starttls()
-    s.login(smtp_mail, smtp_mail_password)
+    # print('inside mail_user method')
+    # s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+    # s.starttls()
+    # s.login(smtp_mail, smtp_mail_password)
 
-    msg = MIMEMultipart()  # create a message
+    # msg = MIMEMultipart()  # create a message
 
-    file_type = filename.split('.')[-1]
+    # file_type = filename.split('.')[-1]
 
-    f = open('/tmp/'+filename, 'rb')
-    image = MIMEImage(f.read(), _subtype=file_type)
-    # image.add_header('Content-Disposition', "Koeman88")
-    f.close()
-    msg.attach(image)
+    # f = open('/tmp/'+filename, 'rb')
+    # image = MIMEImage(f.read(), _subtype=file_type)
+    # # image.add_header('Content-Disposition', "Koeman88")
+    # f.close()
+    # msg.attach(image)
 
-    # setup the parameters of the message
+    # # setup the parameters of the message
 
-    msg['From'] = from_mail
-    msg['To'] = to_mail
-    msg['Subject'] = "Image from lambda, Client/Cam: " + path + " " + filename
+    # msg['From'] = from_mail
+    # msg['To'] = to_mail
+    # msg['Subject'] = "Image from lambda, Client/Cam: " + path + " " + filename
 
-    # add in the message body
-    msg.attach(MIMEText('test', 'plain'))
-    # send the message via the server set up earlier.
-    s.send_message(msg)
-    s.quit()
-    print('Done mailing the user')
+    # # add in the message body
+    # msg.attach(MIMEText('test', 'plain'))
+    # # send the message via the server set up earlier.
+    # s.send_message(msg)
+    # s.quit()
+    # print('Done mailing the user')
