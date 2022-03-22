@@ -14,7 +14,7 @@ s3 = boto3.client('s3')
 s3_resource = boto3.resource('s3')
 
 
-destination_bucketname = os.environ['cxr-dataset-yolo']
+destination_bucketname = os.environ['cxr_dataset_yolo']
 
 
 def lambda_handler(event, context):
@@ -50,10 +50,10 @@ def lambda_handler(event, context):
     print('before uploading output file to destination S3 bucket')
     
     try:
-        s3.upload_file('/tmp/exp/'+filename, destination_bucketname, path+'/output_'+filename)
+        s3.upload_file('/tmp/exp/'+filename, destination_bucketname,"output_images/"+filename)
     except:
         print('inside exp 2 ')
-        s3.upload_file('/tmp/exp2/'+filename, destination_bucketname, path+'/output_'+filename)
+        s3.upload_file('/tmp/exp2/'+filename, destination_bucketname,"output_images/"+ filename)
     
     print('end of yolo processing and uploading output image to s3 bucket')
 
